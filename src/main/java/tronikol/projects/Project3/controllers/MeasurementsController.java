@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import tronikol.projects.Project3.dto.MeasurementsDTO;
+import tronikol.projects.Project3.dto.RainyDaysCountDTO;
 import tronikol.projects.Project3.models.Measurements;
 import tronikol.projects.Project3.services.MeasurementsService;
 import tronikol.projects.Project3.util.*;
@@ -28,6 +29,10 @@ public class MeasurementsController {
     }
 
 
+    @GetMapping("/rainyDaysCount")
+    public RainyDaysCountDTO rainyDaysCount() {
+        return new RainyDaysCountDTO(measurementsService.rainyDaysCount());
+    }
     @GetMapping
     public List<MeasurementsDTO> index() {
         List<MeasurementsDTO> measurementsDTOS = new LinkedList<>();

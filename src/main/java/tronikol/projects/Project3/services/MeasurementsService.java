@@ -21,6 +21,9 @@ public class MeasurementsService {
         this.measurementsRepository = measurementsRepository;
         this.sensorRepository = sensorRepository;
     }
+    public Long rainyDaysCount() {
+        return measurementsRepository.countByRaining(true);
+    }
     @Transactional
     public void add(Measurements measurements) {
         Sensor sensor = sensorRepository.findByName(measurements.getSensor().getName());
