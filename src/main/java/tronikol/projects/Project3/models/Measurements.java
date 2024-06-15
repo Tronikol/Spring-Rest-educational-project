@@ -10,11 +10,11 @@ public class Measurements {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "value")
-    private String value;
+    private Float value;
     @Column(name = "raining")
     private Boolean raining;
 
-    public Measurements(String value, Boolean raining, Sensor sensor) {
+    public Measurements(Float value, Boolean raining, Sensor sensor) {
         this.value = value;
         this.raining = raining;
         this.sensor = sensor;
@@ -39,11 +39,11 @@ public class Measurements {
         this.raining = raining;
     }
 
-    public String getValue() {
+    public Float getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Float value) {
         this.value = value;
     }
 

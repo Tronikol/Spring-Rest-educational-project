@@ -29,7 +29,7 @@ public class SensorController {
         this.sensorService = sensorService;
     }
 
-    @PostMapping("/registrarion")
+    @PostMapping("/registration")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid SensorDTO sensorDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder allErrors = new StringBuilder();
@@ -54,6 +54,7 @@ public class SensorController {
         }
         return sensorDTOS;
     }
+
 
     private SensorDTO convertToSensorDTO(Sensor sensor) {
         ModelMapper modelMapper = new ModelMapper();
