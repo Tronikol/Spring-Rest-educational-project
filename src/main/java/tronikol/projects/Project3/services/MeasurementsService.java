@@ -6,7 +6,6 @@ import tronikol.projects.Project3.models.Measurements;
 import tronikol.projects.Project3.models.Sensor;
 import tronikol.projects.Project3.repositories.MeasurementsRepository;
 import tronikol.projects.Project3.repositories.SensorRepository;
-import tronikol.projects.Project3.util.SensorNotExistException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,9 +27,6 @@ public class MeasurementsService {
     @Transactional
     public void add(Measurements measurements) {
         Sensor sensor = sensorRepository.findByName(measurements.getSensor().getName());
-        if(sensor==null) {
-            throw new SensorNotExistException("Sensor with this name not exist");
-        }
         measurements.setSensor(sensor);
         measurements.setDate(LocalDateTime.now());
         measurementsRepository.save(measurements);

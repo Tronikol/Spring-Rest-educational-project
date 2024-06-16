@@ -2,20 +2,20 @@ package tronikol.projects.Project3.controllers;
 
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import tronikol.projects.Project3.dto.MeasurementsDTO;
 import tronikol.projects.Project3.dto.RainyDaysCountDTO;
 import tronikol.projects.Project3.models.Measurements;
 import tronikol.projects.Project3.services.MeasurementsService;
-import tronikol.projects.Project3.util.*;
+import tronikol.projects.Project3.util.ErrorsUtil;
+import tronikol.projects.Project3.util.MeasurementNotAddException;
+import tronikol.projects.Project3.util.MeasurementsValidator;
+import tronikol.projects.Project3.util.SensorErrorResponse;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,9 +23,12 @@ import java.util.List;
 @RequestMapping("/measurements")
 public class MeasurementsController {
     private final MeasurementsService measurementsService;
+    private final MeasurementsValidator measurementsValidator;
 
-    public MeasurementsController(MeasurementsService measurementsService) {
+    @Autowired
+    public MeasurementsController(MeasurementsService measurementsService, MeasurementsValidator measurementsValidator) {
         this.measurementsService = measurementsService;
+        this.measurementsValidator = measurementsValidator;
     }
 
 
@@ -33,11 +36,12 @@ public class MeasurementsController {
     public RainyDaysCountDTO rainyDaysCount() {
         return new RainyDaysCountDTO(measurementsService.rainyDaysCount());
     }
+
     @GetMapping
     public List<MeasurementsDTO> index() {
         List<MeasurementsDTO> measurementsDTOS = new LinkedList<>();
         List<Measurements> measurements = measurementsService.findAll();
-        for(Measurements measurement : measurements) {
+        for (Measurements measurement : measurements) {
             measurementsDTOS.add(convertToMeasurementsDTO(measurement));
         }
         return measurementsDTOS;
@@ -49,16 +53,11 @@ public class MeasurementsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<HttpStatus> add(@RequestBody @Valid MeasurementsDTO measurementsDTO, BindingResult result){
+    public ResponseEntity<HttpStatus> add(@RequestBody @Valid MeasurementsDTO measurementsDTO, BindingResult result) {
+        Measurements measurements = convertToMeasurements(measurementsDTO);
+        measurementsValidator.validate(measurements, result);
         if (result.hasErrors()) {
-            StringBuilder allErrors = new StringBuilder();
-            List<FieldError> errors = result.getFieldErrors();
-            for (FieldError error : errors) {
-                allErrors.append(error.getField()).append(" : ")
-                        .append(error.getDefaultMessage())
-                        .append("; ");
-            }
-            throw new MeasurementNotAddException(allErrors.toString());
+            throw new MeasurementNotAddException(ErrorsUtil.mapErrors(result));
         }
         measurementsService.add(convertToMeasurements(measurementsDTO));
         return new ResponseEntity<>(HttpStatus.OK);
@@ -68,11 +67,8 @@ public class MeasurementsController {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(measurementsDTO, Measurements.class);
     }
-    @ExceptionHandler
-    public ResponseEntity<SensorErrorResponse> handleException(SensorNotExistException e) {
-        SensorErrorResponse response = new SensorErrorResponse(e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+
+
     @ExceptionHandler
     public ResponseEntity<SensorErrorResponse> handleException(MeasurementNotAddException e) {
         SensorErrorResponse response = new SensorErrorResponse(e.getMessage());

@@ -1,7 +1,5 @@
 package tronikol.projects.Project3.dto;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
