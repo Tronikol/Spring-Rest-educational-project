@@ -8,6 +8,7 @@ class Project3SpringCourseApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }

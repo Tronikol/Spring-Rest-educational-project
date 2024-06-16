@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
+
 public class MeasurementsDTO {
     @Min(-100)
     @Max(100)
@@ -11,6 +13,7 @@ public class MeasurementsDTO {
     private Float value;
     @NotNull
     private Boolean raining;
+    private LocalDateTime date;
 
     public Boolean getRaining() {
         return raining;
@@ -38,4 +41,11 @@ public class MeasurementsDTO {
 
     private SensorDTO sensor;
 
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 }

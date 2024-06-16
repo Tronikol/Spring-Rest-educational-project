@@ -2,6 +2,8 @@ package tronikol.projects.Project3.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "measurements")
 public class Measurements {
@@ -13,6 +15,17 @@ public class Measurements {
     private Float value;
     @Column(name = "raining")
     private Boolean raining;
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    @Column(name = "date")
+    private LocalDateTime date;
 
     public Measurements(Float value, Boolean raining, Sensor sensor) {
         this.value = value;

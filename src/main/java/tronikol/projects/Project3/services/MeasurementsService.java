@@ -8,6 +8,7 @@ import tronikol.projects.Project3.repositories.MeasurementsRepository;
 import tronikol.projects.Project3.repositories.SensorRepository;
 import tronikol.projects.Project3.util.SensorNotExistException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,8 +31,8 @@ public class MeasurementsService {
         if(sensor==null) {
             throw new SensorNotExistException("Sensor with this name not exist");
         }
-        // TODO может можно переделать, проблема в том что сенсор который как бы есть был в несохраненном состояни
         measurements.setSensor(sensor);
+        measurements.setDate(LocalDateTime.now());
         measurementsRepository.save(measurements);
     }
 
